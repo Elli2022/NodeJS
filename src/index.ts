@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended:true }));
 
 
 app.get('/hora',(req, res) =>  res.json({ data:    
-    'jjag tror det'
+    'fuck dettta jävla skit'
 })  );
     
     app.listen(port, hostname, () => {    
