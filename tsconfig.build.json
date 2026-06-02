@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["node"]
+  },
+  "exclude": [
+    "nodemon.js",
+    "node_modules",
+    "build",
+    "src/app/public",
+    "setup-env.js",
+    "src/app/**/*.json",
+    "coverage",
+    "src/tests"
+  ]
+}
