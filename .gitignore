@@ -1,5 +1,10 @@
 node_modules
 .env
 undefined
+build/
+data/
+logs/
+log/
+src/tests/config/data/
 # Local Netlify folder
 .netlify
