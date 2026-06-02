@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: nodejs-microservice-exercises
+    runtime: node
+    plan: free
+    branch: main
+    buildCommand: npm install && npm run build
+    startCommand: npm run start:prod
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: STORAGE
+        value: postgres
+      - key: NODE_HOSTNAME
+        value: 0.0.0.0
+      - key: NODE_NAME
+        value: nodejs-ms
+      - key: DATABASE_URL
+        sync: false

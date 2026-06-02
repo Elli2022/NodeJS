@@ -6,7 +6,7 @@
     <title>nodejs-microservice-exercises</title>
     <meta
       name="description"
-      content="Node.js microservice exercises — Express, filesystem, testing, and refactoring."
+      content="Node.js microservice — Express REST API, Neon Postgres, Render deployment, Mocha tests."
     />
     <style>
       * { box-sizing: border-box; }
@@ -30,6 +30,7 @@
         letter-spacing: 0.04em;
         text-transform: uppercase;
       }
+      .badge-live { background: #047857; color: #d1fae5; margin-left: 8px; }
       h1 { margin: 0 0 12px; font-size: clamp(2rem, 5vw, 2.6rem); line-height: 1.15; }
       .lead { color: #cbd5e1; line-height: 1.7; font-size: 1.05rem; max-width: 62ch; }
       .grid { display: grid; gap: 20px; margin-top: 28px; }
@@ -84,6 +85,7 @@
       }
       .btn:hover { opacity: 0.9; }
       .btn-primary { background: #2563eb; color: #fff; }
+      .btn-live { background: #059669; color: #fff; }
       .btn-secondary {
         background: transparent;
         color: #e2e8f0;
@@ -99,6 +101,11 @@
         font-size: 0.92rem;
         line-height: 1.6;
       }
+      .note-warn {
+        background: rgba(234, 179, 8, 0.1);
+        border-color: rgba(234, 179, 8, 0.35);
+        color: #fde68a;
+      }
       footer {
         margin-top: 32px;
         color: #64748b;
@@ -110,22 +117,33 @@
   <body>
     <main class="wrap">
       <span class="badge">Portfolio docs · Netlify</span>
+      <span class="badge badge-live">Live API · Render</span>
       <h1>nodejs-microservice-exercises</h1>
       <p class="lead">
-        Node.js microservice built with Express, filesystem persistence, Mocha tests,
-        and progressive refactoring branches. This site is the public documentation
-        homepage for the repository.
+        Production-style Node.js microservice: Express REST API, repository pattern,
+        Neon Postgres in production, filesystem for local tests, Mocha coverage, and
+        progressive refactoring branches.
       </p>
 
       <div class="pills">
         <span class="pill">Node.js</span>
         <span class="pill">Express</span>
         <span class="pill">TypeScript</span>
+        <span class="pill">Neon Postgres</span>
+        <span class="pill">Render</span>
         <span class="pill">Mocha</span>
-        <span class="pill">Filesystem</span>
       </div>
 
       <div class="actions">
+        <a
+          id="live-api-btn"
+          class="btn btn-live"
+          href="https://nodejs-microservice-exercises.onrender.com/health"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Try live API
+        </a>
         <a
           class="btn btn-primary"
           href="https://github.com/Elli2022/nodejs-microservice-exercises"
@@ -136,7 +154,7 @@
         </a>
         <a
           class="btn btn-secondary"
-          href="https://github.com/Elli2022/nextjs-auth-blog-modernized"
+          href="https://my-nextjs-project-modernized.netlify.app"
           target="_blank"
           rel="noreferrer"
         >
@@ -145,40 +163,63 @@
       </div>
 
       <p class="note">
-        The REST API runs locally when you start the service (<code>npm start</code>).
-        Netlify hosts this documentation page only — use the commands below to exercise
-        <code>/health</code> and <code>/api/v1/</code> on your machine.
+        <strong>Live API:</strong>
+        <a id="live-api-link" href="https://nodejs-microservice-exercises.onrender.com"
+          >nodejs-microservice-exercises.onrender.com</a
+        >
+        — <code>GET /health</code> returns <code>storage: "postgres"</code> when deployed
+        with Neon. This Netlify page is documentation only.
+      </p>
+
+      <p class="note note-warn">
+        Render free tier sleeps when idle. The first request after a while can take up to
+        ~60 seconds — that is normal for the demo.
       </p>
 
       <div class="grid">
         <section class="card">
           <h2>API endpoints</h2>
           <ul>
-            <li><code>GET /health</code> — service status</li>
+            <li><code>GET /health</code> — status + storage backend</li>
             <li><code>GET /api/v1/</code> — list users</li>
-            <li><code>POST /api/v1/</code> — create user</li>
+            <li><code>POST /api/v1/</code> — create user (validated, hashed password)</li>
           </ul>
+        </section>
+
+        <section class="card">
+          <h2>Architecture</h2>
+          <ul>
+            <li>Docs → Netlify (<code>public/</code>)</li>
+            <li>API → Render (Node 20)</li>
+            <li>DB → Neon serverless Postgres</li>
+            <li>Tests → filesystem repo (no DB required in CI)</li>
+          </ul>
+        </section>
+
+        <section class="card">
+          <h2>Try live (curl)</h2>
+          <pre id="curl-live">curl https://nodejs-microservice-exercises.onrender.com/health
+
+curl -X POST https://nodejs-microservice-exercises.onrender.com/api/v1/ \
+  -H "content-type: application/json" \
+  -d '{"username":"demo123","password":"secret123"}'</pre>
         </section>
 
         <section class="card">
           <h2>Run locally</h2>
           <pre>npm install
 NODE_HOSTNAME=127.0.0.1 NODE_PORT=3000 NODE_NAME=nodejs-ms npm start</pre>
-        </section>
-
-        <section class="card" style="grid-column: 1 / -1">
-          <h2>Example request</h2>
-          <pre>curl http://127.0.0.1:3000/health
-
-curl -X POST http://127.0.0.1:3000/api/v1/ \
-  -H "content-type: application/json" \
-  -d '{"username":"demo123","password":"secret123"}'</pre>
+          <p style="margin-top: 12px">
+            Uses filesystem storage by default. See
+            <code>docs/DEPLOY.md</code> for Neon + Render setup.
+          </p>
         </section>
       </div>
 
       <footer>
-        Live docs: nodejs-microservice-modernized.netlify.app · Source:
-        Elli2022/nodejs-microservice-exercises
+        Docs: nodejs-microservice-modernized.netlify.app · API:
+        nodejs-microservice-exercises.onrender.com ·
+        <a href="https://github.com/Elli2022/nodejs-microservice-exercises">GitHub</a>
       </footer>
     </main>
   </body>

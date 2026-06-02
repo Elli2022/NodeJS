@@ -2,35 +2,33 @@ import { config as dotenvConfig } from "dotenv";
 dotenvConfig();
 
 import { expect } from "chai";
-import * as path from "path";
 import config from "../config";
 import { logger } from "../../app/libs/logger";
 import { rm, readFile } from "node:fs/promises";
 import { makeInputObj } from "../../app/component/entities";
-import {
-  checkDir,
-  readFromFile,
-  writeToFile,
-} from "../../app/component/data-access";
+import { makeUserRepository } from "../../app/component/repositories";
 import createPost from "../../app/component/use-cases/post";
-const post = ({ params }) =>
+
+const userRepository = makeUserRepository({
+  storage: "file",
+  databaseUrl: "",
+  fileDirPath: config.FILE_FOLDER_PATH,
+  fileDirName: config.FILE_FOLDER_NAME,
+  filePath: config.FILE_DB_PATH,
+  filename: config.FILE_DB_NAME,
+  existingUserMessage: config.ERROR_MSG.post.EXISTING_USER,
+});
+
+const post = ({ params }: { params: Record<string, unknown> }) =>
   createPost({
     makeInputObj,
-    checkDir,
-    readFromFile,
-    writeToFile,
+    userRepository,
     logger,
-  }).post({
-    params,
-    filename: config.FILE_DB_NAME,
-    fileDirPath: config.FILE_FOLDER_PATH,
-    fileDirName: config.FILE_FOLDER_NAME,
-    filePath: config.FILE_DB_PATH,
     errorMsgs: config.ERROR_MSG.post,
-  });
+  }).post({ params });
 
 describe("Post", () => {
-  after(() => rm(config.FILE_FOLDER_PATH, { recursive: true }));
+  after(() => rm(config.FILE_FOLDER_PATH, { recursive: true, force: true }));
 
   it("should insert a user", async () => {
     const params = {

@@ -1,6 +1,6 @@
 import sanitizeHtml from "sanitize-html";
 import * as crypto from "crypto";
-import config from "../../../tests/config";
+import config from "../../config";
 import makeInputObjFactory from "./make-input-object";
 
 const errorMsgs = config.ERROR_MSG.post;

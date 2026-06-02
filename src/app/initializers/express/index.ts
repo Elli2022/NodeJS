@@ -9,7 +9,15 @@ import { logger } from "../../libs/logger";
 
 const app = express();
 
-const server = ({ hostname, port }) => {
+const server = ({
+  hostname,
+  port,
+  storage,
+}: {
+  hostname: string;
+  port: number;
+  storage: string;
+}) => {
   createServer({
     json: express.json,
     urlencoded: express.urlencoded,
@@ -19,6 +27,7 @@ const server = ({ hostname, port }) => {
     compression,
     helmet,
     logger,
+    storage,
   }).server({ hostname, port });
 };
 

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 DOCS_URL="${1:-https://nodejs-microservice-modernized.netlify.app}"
-API_URL="${2:-http://127.0.0.1:3000}"
+API_URL="${API_URL:-${2:-http://127.0.0.1:3000}}"
 RUN_API="${RUN_API:-1}"
 
 echo "Docs smoke test: $DOCS_URL"

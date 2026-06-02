@@ -1,47 +1,40 @@
+import type { UserRepository } from "../repositories/types";
+
 export default function createPost({
   makeInputObj,
-  checkDir,
-  readFromFile,
-  writeToFile,
-  // access,
-  // mkdir,
-  // writeFile,
-  // readFile,
+  userRepository,
   logger,
+  errorMsgs,
+}: {
+  makeInputObj: (args: { params: Record<string, unknown> }) => {
+    username: () => string;
+    password: () => string;
+    created: () => number;
+    modified: () => number;
+  };
+  userRepository: UserRepository;
+  logger: { info: (msg: string) => void };
+  errorMsgs: { EXISTING_USER: string };
 }) {
   return Object.freeze({ post });
 
-  async function post({
-    params,
-    filename,
-    fileDirPath,
-    fileDirName,
-    filePath,
-    errorMsgs,
-  }) {
-    let user;
+  async function post({ params }: { params: Record<string, unknown> }) {
     try {
-      logger.info(`[USE-CASE][POST] Inserting user to ${filename} - START!`);
+      logger.info("[USE-CASE][POST] Inserting user - START!");
       const userFactory = makeInputObj({ params });
 
-      user = {
+      const user = {
         username: userFactory.username(),
         password: userFactory.password(),
         created: userFactory.created(),
         modified: userFactory.modified(),
       };
 
-      await checkDir({ fileDirPath, fileDirName });
-      const content = await readFromFile({ filePath, filename });
-      const duplicate = content.filter((el) => el.username == user.username);
-
-      if (duplicate.length) throw new Error(errorMsgs.EXISTING_USER);
-      content.push(user);
-      await writeToFile({ content, filePath, filename });
-      logger.info("[POST] [USE-CASE] Inserting Object process - DONE!");
+      await userRepository.insert(user);
+      logger.info("[POST] [USE-CASE] Inserting user - DONE!");
       return user;
     } catch (e) {
-      logger.info("[POST] [USE-CASE] Inserting Object process - DONE!");
+      logger.info("[POST] [USE-CASE] Inserting user - FAILED!");
       throw e;
     }
   }

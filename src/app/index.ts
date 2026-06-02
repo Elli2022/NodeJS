@@ -1,16 +1,28 @@
 require("dotenv").config();
 
-import config from "../tests/config";
+import appConfig from "./config";
+import { migrateSchema } from "./config/migrate-schema";
 import { server } from "./initializers/express";
 import { logger } from "./libs/logger";
 
-const name = process.env.NAME;
-const hostname = process.env.NODE_HOSTNAME;
-const port = process.env.NODE_PORT;
+async function bootstrap() {
+  try {
+    logger.info(`[${appConfig.APP_NAME}] Bootstrapping microservice (${appConfig.STORAGE})`);
 
-try {
-  logger.info(`[${config.APP_NAME}] Bootstraping micro service`);
-  server({ hostname: config.NODE_HOSTNAME, port: config.NODE_PORT });
-} catch (error) {
-  logger.error(`[${name}] Caught exception: ${error}`);
+    if (appConfig.STORAGE === "postgres") {
+      await migrateSchema(appConfig.DATABASE_URL);
+      logger.info("[bootstrap] Postgres schema ready");
+    }
+
+    server({
+      hostname: appConfig.NODE_HOSTNAME,
+      port: appConfig.NODE_PORT,
+      storage: appConfig.STORAGE,
+    });
+  } catch (error) {
+    logger.error(`[${appConfig.APP_NAME}] Bootstrap failed: ${error}`);
+    process.exit(1);
+  }
 }
+
+bootstrap();

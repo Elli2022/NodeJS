@@ -1,16 +1,23 @@
-// import { readFile } from "fs/promises";
-export default function createGet({ access, readFile, logger }) {
+import type { UserRepository } from "../repositories/types";
+
+export default function createGet({
+  userRepository,
+  logger,
+}: {
+  userRepository: UserRepository;
+  logger: { info: (msg: string) => void };
+}) {
   return Object.freeze({ get });
 
-  async function get(params, filePath, filename) {
+  async function get() {
     try {
-      logger.info(`[USE-CASE] [GET] Reading from files ${filename} -START!`);
-      await access(filePath);
-      const fileContent = await readFile(filePath);
-      logger.info(`[USE-CASE] [GET] Reading from files ${filename} -END!`);
-      return JSON.parse(fileContent);
+      logger.info("[USE-CASE] [GET] Listing users - START!");
+      const results = await userRepository.findAll();
+      logger.info("[USE-CASE] [GET] Listing users - END!");
+      return results;
     } catch (e) {
-      throw e.message;
+      const err = e as Error;
+      throw err.message ?? err;
     }
   }
 }

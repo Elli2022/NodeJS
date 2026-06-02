@@ -1,20 +1,10 @@
 import * as path from "path";
-const APP_NAME = process.env.NODE_NAME;
-const NODE_ENV = "test";
-const NODE_HOSTNAME = process.env.NODE_HOSTNAME;
-const NODE_PORT = process.env.NODE_PORT;
+import appConfig from "../../app/config";
+
 const FILE_FOLDER_NAME = "data";
 const FILE_FOLDER_PATH = path.join(__dirname, "/data/");
 const FILE_DB_NAME = "users.json";
-const FILE_DB_PATH = `${FILE_FOLDER_PATH}/${FILE_DB_NAME}`;
-const ERROR_MSG = {
-  post: {
-    NO_DATA: "no data to insert",
-    EXISTING_USER: "user already exists",
-    MISSING_PARAMETER: "missing parameter: ",
-    INVALID_STRING: "invalid string: ",
-  },
-};
+const FILE_DB_PATH = path.join(FILE_FOLDER_PATH, FILE_DB_NAME);
 
 const TEST_DATA = {
   user1: {
@@ -28,11 +18,11 @@ const TEST_DATA = {
 };
 
 export default Object.freeze({
-  APP_NAME,
-  ERROR_MSG,
-  NODE_ENV,
-  NODE_HOSTNAME,
-  NODE_PORT,
+  APP_NAME: appConfig.APP_NAME,
+  ERROR_MSG: appConfig.ERROR_MSG,
+  NODE_ENV: "test",
+  NODE_HOSTNAME: process.env.NODE_HOSTNAME,
+  NODE_PORT: process.env.NODE_PORT,
   FILE_FOLDER_NAME,
   FILE_FOLDER_PATH,
   FILE_DB_NAME,

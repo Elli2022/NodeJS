@@ -11,6 +11,7 @@ interface ServerOptions {
   compression: any;
   helmet: any;
   logger: any; // Eller den specifika typen för din logger.
+  storage: string;
 }
 
 export default function createServer(options: ServerOptions) {
@@ -31,7 +32,11 @@ export default function createServer(options: ServerOptions) {
     const landingHtml = readFileSync(landingPath, "utf8");
     options.app.get("/", (req, res) => res.type("html").send(landingHtml));
     options.app.get("/health", (req, res) =>
-      res.json({ ok: true, service: "nodejs-microservice" })
+      res.json({
+        ok: true,
+        service: "nodejs-microservice",
+        storage: options.storage,
+      })
     );
     options.app.post("/", (req, res) => res.json({ body: req.body }));
 

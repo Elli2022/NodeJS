@@ -4,7 +4,7 @@ const baseUrl = "/api/v1";
 
 const getEP = async (req, res) => {
   try {
-    const results = await get({ params: req.params });
+    const results = await get();
     res.json({ err: 0, data: results });
   } catch (err) {
     logger.info(`[EP][GET] ${req.method}: ${err.message}`);
