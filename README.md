@@ -37,6 +37,22 @@ npm run start
 npm run build
 ```
 
+## Tests
+
+```bash
+npm test
+```
+
+Run smoke tests (Netlify docs + local API on port 3000):
+
+```bash
+# Terminal 1
+NODE_HOSTNAME=127.0.0.1 NODE_PORT=3000 NODE_NAME=nodejs-ms npm start
+
+# Terminal 2
+npm run smoke
+```
+
 ## Branch history
 
 - `version/base`

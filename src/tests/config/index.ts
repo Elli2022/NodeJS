@@ -11,6 +11,8 @@ const ERROR_MSG = {
   post: {
     NO_DATA: "no data to insert",
     EXISTING_USER: "user already exists",
+    MISSING_PARAMETER: "missing parameter: ",
+    INVALID_STRING: "invalid string: ",
   },
 };
 

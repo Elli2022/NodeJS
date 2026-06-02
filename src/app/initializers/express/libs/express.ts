@@ -52,7 +52,7 @@ export default function createServer(options: ServerOptions) {
           <li>Health check: <code>GET /health</code></li>
           <li>Users API: <code>GET /api/v1/</code> and <code>POST /api/v1/</code></li>
         </ul>
-        <p>Repository: <a href="https://github.com/Elli2022/NodeJS">https://github.com/Elli2022/NodeJS</a></p>
+        <p>Repository: <a href="https://github.com/Elli2022/nodejs-microservice-exercises">https://github.com/Elli2022/nodejs-microservice-exercises</a></p>
       </section>
     </main>
   </body>

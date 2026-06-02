@@ -4,10 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --exit --reporter json -r ts-node/register src/**/*.spec.ts",
+    "test": "mocha --exit -r ts-node/register \"src/tests/**/*.spec.ts\"",
+    "test:ci": "mocha --exit --reporter json -r ts-node/register \"src/tests/**/*.spec.ts\"",
     "build": "tsc",
     "start": "nodemon --exec ts-node ./src/app/index.ts",
-    "serve": "nodemon"
+    "serve": "nodemon",
+    "smoke": "bash scripts/smoke-test.sh"
   },
   "author": "",
   "license": "ISC",

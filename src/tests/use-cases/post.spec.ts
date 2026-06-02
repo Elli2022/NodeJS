@@ -55,7 +55,9 @@ describe("Post", () => {
     try {
       await post({ params });
     } catch (err) {
-      expect(err).to.equal(config.ERROR_MSG.post.NO_DATA);
+      expect((err as Error).message).to.equal(
+        `${config.ERROR_MSG.post.MISSING_PARAMETER}username`
+      );
     }
   });
 
@@ -67,7 +69,7 @@ describe("Post", () => {
     try {
       await post({ params });
     } catch (err) {
-      expect(err).to.equal(config.ERROR_MSG.post.EXISTING_USER);
+      expect((err as Error).message).to.equal(config.ERROR_MSG.post.EXISTING_USER);
     }
   });
 

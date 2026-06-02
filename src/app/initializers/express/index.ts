@@ -14,17 +14,12 @@ const server = ({ hostname, port }) => {
     json: express.json,
     urlencoded: express.urlencoded,
     app,
-    handler: { routes: [] }, // Tillfällig lösning tills du har en faktisk handler.
+    handler: { routes },
     cors,
     compression,
     helmet,
     logger,
   }).server({ hostname, port });
-
-  // Lägg till dina rutter här istället för i createServer
-  routes.forEach((route) => {
-    app[route.method](route.path, route.component);
-  });
 };
 
 export { server };

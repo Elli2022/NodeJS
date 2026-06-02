@@ -9,47 +9,41 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-function createPost({ access, mkdir, writeFile, readFile, logger, }) {
+function createPost({ makeInputObj, checkDir, readFromFile, writeToFile, 
+// access,
+// mkdir,
+// writeFile,
+// readFile,
+logger, }) {
     return Object.freeze({ post });
     function post({ params, filename, fileDirPath, fileDirName, filePath, errorMsgs, }) {
         return __awaiter(this, void 0, void 0, function* () {
+            let user;
             try {
-                if (params.username === undefined || params.password === undefined)
-                    throw new Error(errorMsgs.NO_DATA);
                 logger.info(`[USE-CASE][POST] Inserting user to ${filename} - START!`);
-                yield access(filePath);
-                logger.info(`[USE-CASE][POST] Reading file ${filename} - START!`);
-                const fileContents = yield readFile(filePath, { encoding: "utf8" });
-                const users = JSON.parse(fileContents);
-                logger.info(`[USE-CASE][POST] Reading file ${filename} - DONE!`);
-                logger.info(`[USE-CASE][POST] Validating params  - START!`);
-                const existingUser = users.filter((user) => user.username === params.username);
-                if (existingUser.length)
+                const userFactory = makeInputObj({ params });
+                user = {
+                    username: userFactory.username(),
+                    password: userFactory.password(),
+                    created: userFactory.created(),
+                    modified: userFactory.modified(),
+                };
+                yield checkDir({ fileDirPath, fileDirName });
+                const content = yield readFromFile({ filePath, filename });
+                const duplicate = content.filter((el) => el.username == user.username);
+                if (duplicate.length)
                     throw new Error(errorMsgs.EXISTING_USER);
-                logger.info(`[USE-CASE][POST] Validating params  - DONE!`);
-                logger.info(`[USE-CASE][POST] Writing to file ${filename}  - START!`);
-                users.push(params);
-                yield writeFile(filePath, JSON.stringify(users));
-                logger.info(`[USE-CASE][POST] Writing to file ${filename}  - DONE!`);
-                logger.info(`[USE-CASE][POST] Inserting user to ${filename} - DONE!`);
-                return params;
+                content.push(user);
+                yield writeToFile({ content, filePath, filename });
+                logger.info("[POST] [USE-CASE] Inserting Object process - DONE!");
+                return user;
             }
             catch (e) {
-                if (e.message === errorMsgs.NO_DATA ||
-                    e.message === errorMsgs.EXISTING_USER) {
-                    throw e.message;
-                }
-                logger.info(`[USE-CASE][POST] Creating directory: ${fileDirName}  - START!`);
-                yield mkdir(fileDirPath);
-                logger.info(`[USE-CASE][POST] Creating directory: ${fileDirName} - DONE!`);
-                logger.info(`[USE-CASE][POST] Creating and writing to file ${filename}  - START!`);
-                yield writeFile(filePath, JSON.stringify([params]));
-                logger.info(`[USE-CASE][POST] Creating and writing to file ${filename}  - DONE!`);
-                logger.info(`[USE-CASE][POST] Inserting user to ${filename} - DONE!`);
-                return params;
+                logger.info("[POST] [USE-CASE] Inserting Object process - DONE!");
+                throw e;
             }
         });
     }
 }
 exports.default = createPost;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicG9zdC5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uL3NyYy9hcHAvY29tcG9uZW50L3VzZS1jYXNlcy9wb3N0LnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7O0FBQUEsU0FBd0IsVUFBVSxDQUFDLEVBQ2pDLE1BQU0sRUFDTixLQUFLLEVBQ0wsU0FBUyxFQUNULFFBQVEsRUFDUixNQUFNLEdBQ1A7SUFDQyxPQUFPLE1BQU0sQ0FBQyxNQUFNLENBQUMsRUFBRSxJQUFJLEVBQUUsQ0FBQyxDQUFDO0lBRS9CLFNBQWUsSUFBSSxDQUFDLEVBQ2xCLE1BQU0sRUFDTixRQUFRLEVBQ1IsV0FBVyxFQUNYLFdBQVcsRUFDWCxRQUFRLEVBQ1IsU0FBUyxHQUNWOztZQUNDLElBQUk7Z0JBQ0YsSUFBSSxNQUFNLENBQUMsUUFBUSxLQUFLLFNBQVMsSUFBSSxNQUFNLENBQUMsUUFBUSxLQUFLLFNBQVM7b0JBQ2hFLE1BQU0sSUFBSSxLQUFLLENBQUMsU0FBUyxDQUFDLE9BQU8sQ0FBQyxDQUFDO2dCQUVyQyxNQUFNLENBQUMsSUFBSSxDQUFDLHNDQUFzQyxRQUFRLFdBQVcsQ0FBQyxDQUFDO2dCQUN2RSxNQUFNLE1BQU0sQ0FBQyxRQUFRLENBQUMsQ0FBQztnQkFFdkIsTUFBTSxDQUFDLElBQUksQ0FBQyxpQ0FBaUMsUUFBUSxXQUFXLENBQUMsQ0FBQztnQkFDbEUsTUFBTSxZQUFZLEdBQUcsTUFBTSxRQUFRLENBQUMsUUFBUSxFQUFFLEVBQUUsUUFBUSxFQUFFLE1BQU0sRUFBRSxDQUFDLENBQUM7Z0JBQ3BFLE1BQU0sS0FBSyxHQUFHLElBQUksQ0FBQyxLQUFLLENBQUMsWUFBWSxDQUFDLENBQUM7Z0JBQ3ZDLE1BQU0sQ0FBQyxJQUFJLENBQUMsaUNBQWlDLFFBQVEsVUFBVSxDQUFDLENBQUM7Z0JBRWpFLE1BQU0sQ0FBQyxJQUFJLENBQUMsOENBQThDLENBQUMsQ0FBQztnQkFFNUQsTUFBTSxZQUFZLEdBQUcsS0FBSyxDQUFDLE1BQU0sQ0FDL0IsQ0FBQyxJQUFJLEVBQUUsRUFBRSxDQUFDLElBQUksQ0FBQyxRQUFRLEtBQUssTUFBTSxDQUFDLFFBQVEsQ0FDNUMsQ0FBQztnQkFDRixJQUFJLFlBQVksQ0FBQyxNQUFNO29CQUFFLE1BQU0sSUFBSSxLQUFLLENBQUMsU0FBUyxDQUFDLGFBQWEsQ0FBQyxDQUFDO2dCQUNsRSxNQUFNLENBQUMsSUFBSSxDQUFDLDZDQUE2QyxDQUFDLENBQUM7Z0JBRTNELE1BQU0sQ0FBQyxJQUFJLENBQUMsb0NBQW9DLFFBQVEsWUFBWSxDQUFDLENBQUM7Z0JBQ3RFLEtBQUssQ0FBQyxJQUFJLENBQUMsTUFBTSxDQUFDLENBQUM7Z0JBQ25CLE1BQU0sU0FBUyxDQUFDLFFBQVEsRUFBRSxJQUFJLENBQUMsU0FBUyxDQUFDLEtBQUssQ0FBQyxDQUFDLENBQUM7Z0JBQ2pELE1BQU0sQ0FBQyxJQUFJLENBQUMsb0NBQW9DLFFBQVEsV0FBVyxDQUFDLENBQUM7Z0JBRXJFLE1BQU0sQ0FBQyxJQUFJLENBQUMsc0NBQXNDLFFBQVEsVUFBVSxDQUFDLENBQUM7Z0JBQ3RFLE9BQU8sTUFBTSxDQUFDO2FBQ2Y7WUFBQyxPQUFPLENBQUMsRUFBRTtnQkFDVixJQUNFLENBQUMsQ0FBQyxPQUFPLEtBQUssU0FBUyxDQUFDLE9BQU87b0JBQy9CLENBQUMsQ0FBQyxPQUFPLEtBQUssU0FBUyxDQUFDLGFBQWEsRUFDckM7b0JBQ0EsTUFBTSxDQUFDLENBQUMsT0FBTyxDQUFDO2lCQUNqQjtnQkFFRCxNQUFNLENBQUMsSUFBSSxDQUNULHdDQUF3QyxXQUFXLFlBQVksQ0FDaEUsQ0FBQztnQkFDRixNQUFNLEtBQUssQ0FBQyxXQUFXLENBQUMsQ0FBQztnQkFDekIsTUFBTSxDQUFDLElBQUksQ0FDVCx3Q0FBd0MsV0FBVyxVQUFVLENBQzlELENBQUM7Z0JBRUYsTUFBTSxDQUFDLElBQUksQ0FDVCxpREFBaUQsUUFBUSxZQUFZLENBQ3RFLENBQUM7Z0JBQ0YsTUFBTSxTQUFTLENBQUMsUUFBUSxFQUFFLElBQUksQ0FBQyxTQUFTLENBQUMsQ0FBQyxNQUFNLENBQUMsQ0FBQyxDQUFDLENBQUM7Z0JBQ3BELE1BQU0sQ0FBQyxJQUFJLENBQ1QsaURBQWlELFFBQVEsV0FBVyxDQUNyRSxDQUFDO2dCQUVGLE1BQU0sQ0FBQyxJQUFJLENBQUMsc0NBQXNDLFFBQVEsVUFBVSxDQUFDLENBQUM7Z0JBRXRFLE9BQU8sTUFBTSxDQUFDO2FBQ2Y7UUFDSCxDQUFDO0tBQUE7QUFDSCxDQUFDO0FBekVELDZCQXlFQyJ9
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicG9zdC5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uL3NyYy9hcHAvY29tcG9uZW50L3VzZS1jYXNlcy9wb3N0LnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7O0FBQUEsU0FBd0IsVUFBVSxDQUFDLEVBQ2pDLFlBQVksRUFDWixRQUFRLEVBQ1IsWUFBWSxFQUNaLFdBQVc7QUFDWCxVQUFVO0FBQ1YsU0FBUztBQUNULGFBQWE7QUFDYixZQUFZO0FBQ1osTUFBTSxHQUNQO0lBQ0MsT0FBTyxNQUFNLENBQUMsTUFBTSxDQUFDLEVBQUUsSUFBSSxFQUFFLENBQUMsQ0FBQztJQUUvQixTQUFlLElBQUksQ0FBQyxFQUNsQixNQUFNLEVBQ04sUUFBUSxFQUNSLFdBQVcsRUFDWCxXQUFXLEVBQ1gsUUFBUSxFQUNSLFNBQVMsR0FDVjs7WUFDQyxJQUFJLElBQUksQ0FBQztZQUNULElBQUk7Z0JBQ0YsTUFBTSxDQUFDLElBQUksQ0FBQyxzQ0FBc0MsUUFBUSxXQUFXLENBQUMsQ0FBQztnQkFDdkUsTUFBTSxXQUFXLEdBQUcsWUFBWSxDQUFDLEVBQUUsTUFBTSxFQUFFLENBQUMsQ0FBQztnQkFFN0MsSUFBSSxHQUFHO29CQUNMLFFBQVEsRUFBRSxXQUFXLENBQUMsUUFBUSxFQUFFO29CQUNoQyxRQUFRLEVBQUUsV0FBVyxDQUFDLFFBQVEsRUFBRTtvQkFDaEMsT0FBTyxFQUFFLFdBQVcsQ0FBQyxPQUFPLEVBQUU7b0JBQzlCLFFBQVEsRUFBRSxXQUFXLENBQUMsUUFBUSxFQUFFO2lCQUNqQyxDQUFDO2dCQUVGLE1BQU0sUUFBUSxDQUFDLEVBQUUsV0FBVyxFQUFFLFdBQVcsRUFBRSxDQUFDLENBQUM7Z0JBQzdDLE1BQU0sT0FBTyxHQUFHLE1BQU0sWUFBWSxDQUFDLEVBQUUsUUFBUSxFQUFFLFFBQVEsRUFBRSxDQUFDLENBQUM7Z0JBQzNELE1BQU0sU0FBUyxHQUFHLE9BQU8sQ0FBQyxNQUFNLENBQUMsQ0FBQyxFQUFFLEVBQUUsRUFBRSxDQUFDLEVBQUUsQ0FBQyxRQUFRLElBQUksSUFBSSxDQUFDLFFBQVEsQ0FBQyxDQUFDO2dCQUV2RSxJQUFJLFNBQVMsQ0FBQyxNQUFNO29CQUFFLE1BQU0sSUFBSSxLQUFLLENBQUMsU0FBUyxDQUFDLGFBQWEsQ0FBQyxDQUFDO2dCQUMvRCxPQUFPLENBQUMsSUFBSSxDQUFDLElBQUksQ0FBQyxDQUFDO2dCQUNuQixNQUFNLFdBQVcsQ0FBQyxFQUFFLE9BQU8sRUFBRSxRQUFRLEVBQUUsUUFBUSxFQUFFLENBQUMsQ0FBQztnQkFDbkQsTUFBTSxDQUFDLElBQUksQ0FBQyxvREFBb0QsQ0FBQyxDQUFDO2dCQUNsRSxPQUFPLElBQUksQ0FBQzthQUNiO1lBQUMsT0FBTyxDQUFDLEVBQUU7Z0JBQ1YsTUFBTSxDQUFDLElBQUksQ0FBQyxvREFBb0QsQ0FBQyxDQUFDO2dCQUNsRSxNQUFNLENBQUMsQ0FBQzthQUNUO1FBQ0gsQ0FBQztLQUFBO0FBQ0gsQ0FBQztBQS9DRCw2QkErQ0MifQ==

@@ -35,7 +35,7 @@ export default function createPost({
       const content = await readFromFile({ filePath, filename });
       const duplicate = content.filter((el) => el.username == user.username);
 
-      if (duplicate.lenght) throw new Error(errorMsgs.EXISTING_USER);
+      if (duplicate.length) throw new Error(errorMsgs.EXISTING_USER);
       content.push(user);
       await writeToFile({ content, filePath, filename });
       logger.info("[POST] [USE-CASE] Inserting Object process - DONE!");
