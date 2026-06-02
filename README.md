@@ -1,31 +1,50 @@
-# NodeJS
+# nodejs-microservice-exercises
 
-Node.js microservice exercises — Express, file systems, testing, refactoring (2023).
+Node.js microservice exercises focused on Express, filesystem data handling, and iterative refactoring.
 
-`main` is the final refactored version with entities and data-access layer.
+## Live docs page
 
-## Version history
+https://nodejs-microservice-modernized.netlify.app
 
-| Branch | Description | Date |
-|--------|-------------|------|
-| `version/base` | Initial bootstrap | 2023-10-10 |
-| `version/back-to-ep` | Back to EP | 2023-10-19 |
-| `version/filesystems-fs` | File systems FS | 2023-10-19 |
-| `version/2nd-challenge` | 2nd challenge | 2023-10-20 |
-| `version/refactoring` | Refactoring | 2023-10-20 |
-| `version/fs-use-cases-post` | FS use-cases post | 2023-10-20 |
-| `version/testing` | Testing | 2023-10-21 |
-| `version/testing-post-spec` | Testing post.spec | 2023-10-21 |
-| `main` | Refactoring entity | 2023-10-21 |
+## What was modernized
 
-```bash
-git checkout version/base
-git checkout main
-```
+- Added a cleaner landing page for the root endpoint.
+- Added a dedicated health endpoint (`GET /health`).
+- Added a static docs/deployment page for a polished public preview.
+- Updated README with practical run instructions and project context.
 
-## Getting started
+## Screenshot
+
+![Service Home](./screenshots/service-home.svg)
+
+## API endpoints
+
+- `GET /` — service landing page (HTML)
+- `GET /health` — health response (`{ ok: true }`)
+- `GET /api/v1/` — list users/data from filesystem
+- `POST /api/v1/` — create user/data entry
+
+## Local development
 
 ```bash
 npm install
-npm run dev
+npm run start
 ```
+
+## Build
+
+```bash
+npm run build
+```
+
+## Branch history
+
+- `version/base`
+- `version/back-to-ep`
+- `version/filesystems-fs`
+- `version/2nd-challenge`
+- `version/refactoring`
+- `version/fs-use-cases-post`
+- `version/testing`
+- `version/testing-post-spec`
+- `main`
