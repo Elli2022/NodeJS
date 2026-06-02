@@ -9,7 +9,7 @@ echo "Docs smoke test: $DOCS_URL"
 DOCS_CODE=$(curl -s -o /tmp/nodejs-docs.html -w "%{http_code}" "$DOCS_URL")
 echo "  GET / -> HTTP $DOCS_CODE"
 [[ "$DOCS_CODE" == "200" ]] || exit 1
-grep -q "NodeJS Microservice" /tmp/nodejs-docs.html || exit 1
+grep -q "nodejs-microservice-exercises" /tmp/nodejs-docs.html || exit 1
 
 if [[ "$RUN_API" != "1" ]]; then
   echo "Skipping API smoke (RUN_API!=1)."
